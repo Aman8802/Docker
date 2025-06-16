@@ -1,0 +1,39 @@
+## Docker Compose
+## This we use to automate the things which we have to do in docker (Pulling image, running image or starting container etc.)
+## Now, I am creating an automation for WordPress and MySQL which linked together in which WordPress on port 8081, MySQL with persistent volume and WordPress files also persisted via volume
+## To use docker-compose automate we have to create docker-compose.yml and put all command over there. 
+version: '2.24.1'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_container
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: aman
+      WORDPRESS_DB_PASSWORD: '12345'
+      WORDPRESS_DB_NAME: wpdatabase
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on:
+      - db
+
+
+  db:
+    image: mysql:5.7
+    container_name: mysql_container
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: wpdatabase
+      MYSQL_USER: aman
+      MYSQL_PASSWORD: '12345'
+      MYSQL_ROOT_PASSWORD: '12345'
+
+volumes:
+  wordpress_data:
+  mysql_data:
